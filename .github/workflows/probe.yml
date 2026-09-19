@@ -1,0 +1,23 @@
+name: probe
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch page once
+        env:
+          PAGE_URL: ${{ secrets.PAGE_URL }}
+        run: python probe.py
+      - name: Save HTML for inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: page-html
+          path: page.html
+          retention-days: 1
